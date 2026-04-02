@@ -8,12 +8,15 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-    <body onload="draw()">
-	<canvas id="canvas" width="300" height="300"></canvas>
+<body onload="drawIt()">
+	<div id="container">
+		<canvas id="canvas" width="600" height="900"></canvas>
+		<p>Čas: <mark id="cas">00:00</mark></p>
+		<p>Točke: <mark id="tocke">0</mark></p>
+	</div>
+
 	
-
-
-    <script src="js/script.js"></script>
 </body>
+	<script src="js/jquery.js"></script>
+    <script src="js/script.js"></script>
 </html>
