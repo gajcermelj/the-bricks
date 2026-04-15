@@ -1,4 +1,27 @@
-.{
-	justify-content: center;
-	border: 2px solid black;
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Višina celega zaslona */
+    margin: 0;
+    overflow: hidden; /* Prepreči scrollanje */
+    background-color: #f0f0f0;
+	background-image: url('../Slike/court.png');
+	background-size: cover;
+}
+
+#container {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;    
+    justify-content: center; 
+    text-align: center;
+}
+
+canvas {
+    border: 2px solid black;
+    background: white;
+    display: block;
+	background: transparent;
 }

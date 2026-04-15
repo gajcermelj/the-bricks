@@ -1,21 +1,29 @@
+var hitrostAI = 0.9;
+
+var brickSlika = new Image();
+brickSlika.src = 'Slike/net.jpg';
 function drawIt() {
-    var x = 150;
-    var y = 150;
-    var dx = 2;
-    var dy = 4;
+    // Žogica se bo začela premikati šele po odštevanju, zato začnemo z dx=0 in dy=0
+    var x = 200; // Sredina platna (WIDTH / 2)
+    var y = 350; // Sredina platna (HEIGHT / 2)
+    var dx = 0;
+    var dy = 0; 
     var WIDTH;
     var HEIGHT;
-    var r = 10;
+    var r = 6;
     var ctx;
-    var paddlex;
-    var paddleh;
-    var paddlew;
+	var stranServisa="leva";
+    
+    var paddlex;      
+    var paddlex2;     
+    var paddleh = 10;
+    var paddlew = 75;
 
-    //tipke za premikanje ploščice
     var rightDown = false;
     var leftDown = false;
+    var paddleActive = false; 
+    var spaceDown = false; 
 
-    //opeke
     var bricks;
     var NROWS;
     var NCOLS;
@@ -23,190 +31,265 @@ function drawIt() {
     var BRICKHEIGHT;
     var PADDING;
 
-    //timer
-    var sekunde;
-    var sekundeI;
-    var minuteI;
-    var intTimer;
-    var izpisTimer;
+    // Teniško točkovanje
+    var tockeIgralec = 0;
+    var tockeAI = 0;
+    var tennisRezultati = [0, 15, 30, 40, "IGRA"]; // Možni rezultati
+    
+    // Spremenljivke za premor in odštevanje
+    var igraPoteka = false;
+    var odstevanjeTekst = "";
+
+    var sekunde = 0;
+    var izpisTimer = "00:00";
     var start = true;
-
-
+    var intervalId;
 
     function init() {
-        tocke = 0;
-        $("#tocke").html(tocke);
-        sekunde = 0;
-        izpisTimer = "00:00";
-        intTimer = setInterval(timer, 1000);
         ctx = $('#canvas')[0].getContext("2d");
         WIDTH = $("#canvas").width();
         HEIGHT = $("#canvas").height();
-        return setInterval(draw, 10);
+        
+        setInterval(timer, 1000);
+        
+        init_paddle();
+        init_bricks();
+        
+        resetZogice(); // Postavi žogico in začne 3-sekundno odštevanje
+        
+        intervalId = setInterval(draw, 10);
     }
 
-    //timer
+    // Funkcija za premor in odštevanje pred začetkom igre
+    function resetZogice() {
+        igraPoteka = false; // Žogica miruje
+		if(stranServisa==="leva"){
+			y=50;
+			stranServisa="desna";
+		}
+		else if(stranServisa==="desna"){
+			y=HEIGHT-50;
+			stranServisa="leva";
+		}
+        x = WIDTH / 2;
+        //y = HEIGHT / 2;
+        dx = 0;
+        dy = 0;
+        
+        var odstevanje = 3;
+        odstevanjeTekst = "3";
+
+        // Odštevalnik, ki se sproži vsako sekundo
+        var countInterval = setInterval(function() {
+            odstevanje--;
+            if (odstevanje > 0) {
+                odstevanjeTekst = odstevanje.toString();
+            } else if (odstevanje === 0) {
+                odstevanjeTekst = "IGRAJ!";
+            } else {
+                // Ko pride pod nič, počistimo tekst in poženemo žogico
+                clearInterval(countInterval);
+                odstevanjeTekst = "";
+                igraPoteka = true;
+                dx = 1.1; 
+                dy = 2.5; // Žogica poleti proti tebi
+            }
+        }, 1000);
+    }
+
     function timer() {
-        if (start == true) {
+        if (start) {
             sekunde++;
-
-            sekundeI = ((sekundeI = (sekunde % 60)) > 9) ? sekundeI : "0" + sekundeI;
-            minuteI = ((minuteI = Math.floor(sekunde / 60)) > 9) ? minuteI : "0" + minuteI;
-            izpisTimer = minuteI + ":" + sekundeI;
-
-            $("#cas").html(izpisTimer);
-        }
-        else {
-            sekunde = 0;
-            //izpisTimer = "00:00";
-            $("#cas").html(izpisTimer);
+            var s = (sekunde % 60 > 9) ? (sekunde % 60) : "0" + (sekunde % 60);
+            var m = (Math.floor(sekunde / 60) > 9) ? Math.floor(sekunde / 60) : "0" + Math.floor(sekunde / 60);
+            izpisTimer = m + ":" + s;
         }
     }
-
-    //nastavljanje leve in desne tipke
-    function onKeyDown(evt) {
-        if (evt.keyCode == 65)
-            leftDown = true;
-        else if (evt.keyCode == 68) rightDown = true;
-    }
-
-    function onKeyUp(evt) {
-        if (evt.keyCode == 65)
-            leftDown = false;
-        else if (evt.keyCode == 68) rightDown = false;
-    }
-    $(document).keydown(onKeyDown);
-    $(document).keyup(onKeyUp);
 
     function init_paddle() {
-        paddlex = WIDTH / 2;
-        paddleh = 10;
-        paddlew = 75;
+        paddlex = WIDTH / 2 - paddlew / 2;
+        paddlex2 = WIDTH / 2 - paddlew / 2;
     }
 
-    function initbricks() { //inicializacija opek - polnjenje v tabelo
-        NROWS = 10;
-        NCOLS = 10;
-        BRICKWIDTH = (WIDTH / NCOLS) - 1;
+    function init_bricks() {
+        NROWS = 3; 
+        NCOLS = 8;
+        BRICKWIDTH = (WIDTH / NCOLS) - 2;
         BRICKHEIGHT = 15;
-        PADDING = 1;
+        PADDING = 2;
         bricks = new Array(NROWS);
-        for (i = 0; i < NROWS; i++) {
+        for (let i = 0; i < NROWS; i++) {
             bricks[i] = new Array(NCOLS);
-            for (j = 0; j < NCOLS; j++) {
-				var x=Math.floor(Math.random()*2);
-                bricks[i][j] = x;
+            for (let j = 0; j < NCOLS; j++) {
+                bricks[i][j] = 1;
             }
         }
     }
 
+    $(document).keydown(function(evt) {
+        if (evt.keyCode == 68) rightDown = true;
+        else if (evt.keyCode == 65) leftDown = true;
+        else if (evt.keyCode == 32 && !spaceDown) { 
+            spaceDown = true;
+            paddleActive = true;
+            setTimeout(function() {
+                paddleActive = false;
+            }, 300); 
+        }
+    });
+
+    $(document).keyup(function(evt) {
+        if (evt.keyCode == 68) rightDown = false;
+        else if (evt.keyCode == 65) leftDown = false;
+        else if (evt.keyCode == 32) spaceDown = false; 
+    });
 
     function circle(x, y, r) {
         ctx.beginPath();
         ctx.arc(x, y, r, 0, Math.PI * 2, true);
-        ctx.closePath();
         ctx.fill();
     }
 
     function rect(x, y, w, h) {
         ctx.beginPath();
         ctx.rect(x, y, w, h);
-        ctx.closePath();
         ctx.fill();
     }
 
-    function clear() {
-        ctx.clearRect(0, 0, WIDTH, HEIGHT);
-    }
-    //END LIBRARY CODE
     function draw() {
-        clear();
-        circle(x, y, 10);
-        //premik ploščice levo in desno
-        if (rightDown) {
-            if ((paddlex + paddlew) < WIDTH) {
-                paddlex += 5;
-            } else {
-                paddlex = WIDTH - paddlew;
-            }
-        }
-        else if (leftDown) {
-            if (paddlex > 0) {
-                paddlex -= 5;
-            } else {
-                paddlex = 0;
-            }
-        }
+        ctx.clearRect(0, 0, WIDTH, HEIGHT);
+        
+        // NOVO: IZRIS REZULTATA IN ČASA NA DESNO STRAN
+        ctx.fillStyle = "white"; // Ista barva kot counter
+        ctx.font = "bold 50px Arial"; // Velikost pisave
+        ctx.textAlign = "right"; // Poravnava v desno
 
+        // Narišemo tekst na desno stran
+        ctx.fillText("AI: " + tennisRezultati[tockeAI], WIDTH - 20, 60);
+        ctx.fillText("TI: " + tennisRezultati[tockeIgralec], WIDTH - 20, 120);
+        ctx.fillText(izpisTimer, WIDTH - 20, 180);
 
+        ctx.textAlign = "left"; // Obvezno ponastavimo nazaj na levo
+
+        // Risanje žogice
+        ctx.fillStyle = "#CCFF00";
+        circle(x, y, r);
+
+        // Risanje in premik spodnje ploščice
+        if (rightDown && (paddlex + paddlew) < WIDTH) paddlex += 5;
+        else if (leftDown && paddlex > 0) paddlex -= 5;
+        
+        if (paddleActive) {
+            ctx.fillStyle = "black"; 
+        } else {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.3)"; 
+        }
         rect(paddlex, HEIGHT - paddleh, paddlew, paddleh);
+        ctx.fillStyle = "black"; 
 
-        //riši opeke
-        for (i = 0; i < NROWS; i++) {
-            for (j = 0; j < NCOLS; j++) {
+        // Risanje in premik zgornje ploščice (AI)
+        var centerPloščice = paddlex2 + (paddlew / 2);
+        if (centerPloščice < x && (paddlex2 + paddlew) < WIDTH) {
+            paddlex2 += hitrostAI; 
+        } else if (centerPloščice > x && paddlex2 > 0) {
+            paddlex2 -= hitrostAI;
+        }
+        rect(paddlex2, 0, paddlew, paddleh);
+
+        var offsetZgoraj = 310; 
+        for (let i = 0; i < NROWS; i++) {
+            for (let j = 0; j < NCOLS; j++) {
                 if (bricks[i][j] == 1) {
-                    rect((j * (BRICKWIDTH + PADDING)) + PADDING,
-                        (i * (BRICKHEIGHT + PADDING)) + PADDING,
-                        BRICKWIDTH, BRICKHEIGHT);
+                    ctx.drawImage(
+                        brickSlika, 
+                        j * (BRICKWIDTH + PADDING) + PADDING, 
+                        i * (BRICKHEIGHT + PADDING) + offsetZgoraj, 
+                        BRICKWIDTH, 
+                        BRICKHEIGHT
+					);
                 }
             }
         }
 
+        // Odbijanje od opek
+        var rowheight = BRICKHEIGHT + PADDING;
+        var colwidth = BRICKWIDTH + PADDING;
+        var row = Math.floor((y - offsetZgoraj) / rowheight);
+        var col = Math.floor(x / colwidth);
 
-        rowheight = BRICKHEIGHT + PADDING + r / 2; //Smo zadeli opeko?
-        colwidth = BRICKWIDTH + PADDING + r / 2;
-        row = Math.floor(y / rowheight);
-        col = Math.floor(x / colwidth);
-        if (y < NROWS * rowheight && row >= 0 && col >= 0 && bricks[row][col] == 1) {
-            // razdalja žogce do vodoravnih in navpičnih robov opeke
-            var distX = Math.abs(x - (col * colwidth + BRICKWIDTH / 2));
-            var distY = Math.abs(y - (row * rowheight + BRICKHEIGHT / 2));
-
-            if (distX / BRICKWIDTH > distY / BRICKHEIGHT)
-                dx = -dx; // zadetek z leve ali desne strani
-            else
-                dy = -dy; // zadetek z zgornje ali spodnje strani
-
+        if (y > offsetZgoraj && row < NROWS && row >= 0 && col >= 0 && bricks[row][col] == 1) {
+            dy = -dy;
             bricks[row][col] = 0;
-            tocke += 1;
-            $("#tocke").html(tocke);
         }
 
-        //odboj od leve in desne stene
-        if (x + dx > WIDTH - r || x + dx < 0 + r)
-            dx = -dx;//ce bi zogca zadela steno ji obrni x smer
+        if (x + dx > WIDTH - r || x + dx < r) dx = -dx;
 
-        //odboj od zgornje stene
-        if (y + dy < 0 + r)
-            dy = -dy;//ce bi zogca zadela steno ji obrni y smer
-
-        //odboj od spodnje stene
-        else if (y + dy > HEIGHT - (r + paddleh)) {
-            start = false;
-            //preveri ali je zadel ploščico
-            if (x > paddlex && x < paddlex + paddlew) {
-                dx = 8 * ((x - (paddlex + paddlew / 2)) / paddlew);//ce bolj na sredino ploščice zadene, manjši odboj, če bolj na rob, večji odboj
-                dy = -dy; //obbrni y smer
-                start = true;
+        // ODBOJ ZGORAJ (Kaj se zgodi, če AI zgreši)
+        if (y + dy < r + paddleh) {
+            if (x > paddlex2 && x < paddlex2 + paddlew) {
+                dy = -dy;
+            } else if (y + dy < 0) { 
+                tockeIgralec++;
+                
+                if (tockeIgralec >= 4) {
+                    clearInterval(intervalId); 
+                    Swal.fire({
+                        title: 'ZMAGA!',
+                        text: 'Dobil si to igro!',
+                        icon: 'success',
+                        confirmButtonText: 'Igraj ponovno',
+                        confirmButtonColor: '#28a745',
+                        allowOutsideClick: false
+                    }).then((result) => {
+                        if (result.isConfirmed) { location.reload(); }
+                    });
+                } else {
+                    resetZogice();
+                }
             }
-
-            //ustavi interval draw
-            else if (y + dy > HEIGHT - r)
-                clearInterval(intervalId);
         }
-        x += dx;
-        y += dy;
+
+        // ODBOJ SPODAJ (Kaj se zgodi, če ti zgrešiš)
+        if (y + dy > HEIGHT - (r + paddleh)) {
+            if (x > paddlex && x < paddlex + paddlew && paddleActive) {
+                dx = 8 * ((x - (paddlex + paddlew / 2)) / paddlew);
+                dy = -dy;
+            } else if (y + dy > HEIGHT) { 
+                tockeAI++;
+                
+                if (tockeAI >= 4) {
+                    clearInterval(intervalId); 
+                    Swal.fire({
+                        title: 'IZGUBIL SI!',
+                        text: 'Nasprotnik je dobil igro.',
+                        icon: 'error',
+                        confirmButtonText: 'Poskusi znova',
+                        confirmButtonColor: '#d33',
+                        allowOutsideClick: false
+                    }).then((result) => {
+                        if (result.isConfirmed) { location.reload(); }
+                    });
+                } else {
+                    resetZogice();
+                }
+            }
+        }
+
+        // PREMIK ŽOGICE
+        if (igraPoteka) {
+            x += dx;
+            y += dy;
+        }
+
+        // Tekst za odštevanje na sredini
+        if (odstevanjeTekst !== "") {
+            ctx.fillStyle = "white";
+            ctx.font = "bold 60px Arial";
+            ctx.textAlign = "center";
+            ctx.fillText(odstevanjeTekst, WIDTH / 2, HEIGHT / 2 + 60);
+            ctx.textAlign = "left"; 
+        }
     }
 
     init();
-    init_paddle();
-    initbricks();
-
-
 }
-
-
-
-
-
-
