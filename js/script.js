@@ -3,9 +3,9 @@ var hitrostAI = 0.9;
 var brickSlika = new Image();
 brickSlika.src = 'Slike/net.jpg';
 function drawIt() {
-    // Žogica se bo začela premikati šele po odštevanju, zato začnemo z dx=0 in dy=0
-    var x = 200; // Sredina platna (WIDTH / 2)
-    var y = 350; // Sredina platna (HEIGHT / 2)
+    
+    var x = 200;
+    var y = 350;
     var dx = 0;
     var dy = 0; 
     var WIDTH;
@@ -53,16 +53,16 @@ function drawIt() {
         setInterval(timer, 1000);
         
         init_paddle();
-        init_bricks();
+        //init_bricks();
         
-        resetZogice(); // Postavi žogico in začne 3-sekundno odštevanje
+        resetZogice();
         
         intervalId = setInterval(draw, 10);
     }
 
-    // Funkcija za premor in odštevanje pred začetkom igre
+    
     function resetZogice() {
-        igraPoteka = false; // Žogica miruje
+        igraPoteka = false;
 		if(stranServisa==="leva"){
 			y=50;
 			stranServisa="desna";
@@ -79,7 +79,7 @@ function drawIt() {
         var odstevanje = 3;
         odstevanjeTekst = "3";
 
-        // Odštevalnik, ki se sproži vsako sekundo
+        
         var countInterval = setInterval(function() {
             odstevanje--;
             if (odstevanje > 0) {
@@ -87,12 +87,12 @@ function drawIt() {
             } else if (odstevanje === 0) {
                 odstevanjeTekst = "IGRAJ!";
             } else {
-                // Ko pride pod nič, počistimo tekst in poženemo žogico
+                
                 clearInterval(countInterval);
                 odstevanjeTekst = "";
                 igraPoteka = true;
                 dx = 1.1; 
-                dy = 2.5; // Žogica poleti proti tebi
+                dy = 2.5;
             }
         }, 1000);
     }
@@ -159,14 +159,14 @@ function drawIt() {
     function draw() {
         ctx.clearRect(0, 0, WIDTH, HEIGHT);
         
-        // NOVO: IZRIS REZULTATA IN ČASA NA DESNO STRAN
-        ctx.fillStyle = "white"; // Ista barva kot counter
-        ctx.font = "bold 50px Arial"; // Velikost pisave
-        ctx.textAlign = "right"; // Poravnava v desno
+        // IZRIS REZULTATA IN ČASA NA DESNO STRAN
+        ctx.fillStyle = "white";
+        ctx.font = "bold 50px Arial";
+        ctx.textAlign = "right";
 
         // Narišemo tekst na desno stran
-        ctx.fillText("AI: " + tennisRezultati[tockeAI], WIDTH - 20, 60);
-        ctx.fillText("TI: " + tennisRezultati[tockeIgralec], WIDTH - 20, 120);
+        ctx.fillText("P2: " + tennisRezultati[tockeAI], WIDTH - 20, 60);
+        ctx.fillText("P1: " + tennisRezultati[tockeIgralec], WIDTH - 20, 120);
         ctx.fillText(izpisTimer, WIDTH - 20, 180);
 
         ctx.textAlign = "left"; // Obvezno ponastavimo nazaj na levo
@@ -187,7 +187,7 @@ function drawIt() {
         rect(paddlex, HEIGHT - paddleh, paddlew, paddleh);
         ctx.fillStyle = "black"; 
 
-        // Risanje in premik zgornje ploščice (AI)
+        // Risanje in premik zgornje ploščice
         var centerPloščice = paddlex2 + (paddlew / 2);
         if (centerPloščice < x && (paddlex2 + paddlew) < WIDTH) {
             paddlex2 += hitrostAI; 
@@ -224,7 +224,7 @@ function drawIt() {
 
         if (x + dx > WIDTH - r || x + dx < r) dx = -dx;
 
-        // ODBOJ ZGORAJ (Kaj se zgodi, če AI zgreši)
+        // ODBOJ ZGORAJ
         if (y + dy < r + paddleh) {
             if (x > paddlex2 && x < paddlex2 + paddlew) {
                 dy = -dy;
@@ -249,7 +249,7 @@ function drawIt() {
             }
         }
 
-        // ODBOJ SPODAJ (Kaj se zgodi, če ti zgrešiš)
+        // ODBOJ SPODAJ
         if (y + dy > HEIGHT - (r + paddleh)) {
             if (x > paddlex && x < paddlex + paddlew && paddleActive) {
                 dx = 8 * ((x - (paddlex + paddlew / 2)) / paddlew);

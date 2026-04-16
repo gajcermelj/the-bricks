@@ -1,11 +1,9 @@
 body {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh; /* Višina celega zaslona */
+    height: 100vh;
     margin: 0;
-    overflow: hidden; /* Prepreči scrollanje */
+    overflow: hidden;
     background-color: #f0f0f0;
 	background-image: url('../Slike/court.png');
 	background-size: cover;
@@ -24,4 +22,12 @@ canvas {
     background: white;
     display: block;
 	background: transparent;
+}
+
+#score{
+	display: flex;
+	height: 30vh;
+	width: 40vh;
+	background-image: url('../Slike/score2.png');
+	background-size: cover;
 }
