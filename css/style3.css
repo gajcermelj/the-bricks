@@ -1,0 +1,78 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0; 
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    background-image: url('../Slike/zacetnastran.png');
+	background-size: cover;
+}
+
+/* 3D Oranžen naslov */
+h1 {
+    font-size: 6rem;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    margin-bottom: 50px;
+    background-color: #e67e22; 
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: #e67e22; 
+    text-shadow: 
+        1px 1px 0px #fff, 
+        2px 2px 0px #ccc, 
+        3px 3px 0px #d35400, 
+        4px 4px 0px #d35400, 
+        5px 5px 0px #d35400,
+        6px 6px 15px rgba(0,0,0,0.4);
+}
+
+.menu-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+/* 3D Gumbi - Retro 2016 stil */
+.btn {
+    padding: 15px 40px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    background-color: #e67e22; /* Oranžna */
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-transform: uppercase;
+    box-shadow: 0 6px 0 #d35400, 0 10px 10px rgba(0,0,0,0.2); 
+    transition: all 0.1s ease;
+    width: 250px;
+}
+
+.btn:active {
+    transform: translateY(6px); /* Gumb se ob pritisku pomakne dol */
+    box-shadow: 0 0px 0 #d35400, 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.btn:hover {
+    background-color: #f39c12; /* Svetlejša oranžna ob prehodu z miško */
+}
+
+/* Gumb "Začni" */
+.btn-start {
+    margin-top: 30px;
+    background-color: #27ae60; /* Zelena barva */
+    box-shadow: 0 6px 0 #2ecc71, 0 10px 10px rgba(0,0,0,0.2);
+}
+
+.btn-start:active {
+    box-shadow: 0 0px 0 #2ecc71, 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.btn-start:hover {
+    background-color: #2ecc71;
+}

@@ -3,24 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TENIS ROYAL</title>
+    <title>IZBIRA NAČINA - TENIS ROYAL</title>
 	<link rel="shortcut icon" type="slike/icon" href="slike/icon.png" />
     <link rel="stylesheet" href="css/style2.css">
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
-    <h1>TENIS</h1>
+    <h1>NAČIN IGRE</h1>
 
     <div class="menu-container">
-        <button class="btn">Lahek</button>
-        <button class="btn">Srednji</button>
-        <button class="btn">Težek</button>
-
-        <button class="btn btn-start" onclick="navodila()">NAVODILA</button>
+        <button class="btn" onclick="selectMode('1p')">1 IGRALEC</button>
+        <button class="btn" onclick="selectMode('2p')">2 IGRALCA</button>
     </div>
 
-	<script src="js/jquery.js"></script>
-    <script src="js/script2.js"></script>
+    <script>
+        function selectMode(mode) {
+            
+			if(mode==='1p'){
+				localStorage.setItem('gameMode', mode);
+				window.location.href = 'index2.html'; 
+			}
+			else if(mode==='2p'){
+				localStorage.setItem('gameMode', '2p');
+				window.location.href = 'igra.html';
+			}					
+		}
+    </script>
 </body>
 </html>

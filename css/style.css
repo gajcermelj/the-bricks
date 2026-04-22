@@ -24,10 +24,51 @@ canvas {
 	background: transparent;
 }
 
-#score{
-	display: flex;
-	height: 30vh;
-	width: 40vh;
-	background-image: url('../Slike/score2.png');
-	background-size: cover;
+#score {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 30vh;
+    width: 60vh;
+    background-image: url('../Slike/scoreboard.png');
+    background-size: cover;
+}
+
+#player1, #score1, #player2, #score2 {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 3vh;
+    font-family: Arial, sans-serif;
+}
+
+
+#player1 {
+    top: 35%;
+    left: 10%;
+    width: 50%;
+    height: 20%;
+}
+
+#score1 {
+    top: 35%;
+    left: 70.1%;
+    width: 15%;
+    height: 20%;
+}
+
+#player2 {
+    top: 60%;
+    left: 10%;
+    width: 50%;
+    height: 20%;
+}
+
+#score2 {
+    top: 60%;
+    left: 70.1%;
+    width: 15%;
+    height: 20%;
 }

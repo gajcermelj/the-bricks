@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TENIS ROYAL</title>
+	<link rel="shortcut icon" type="slike/icon" href="slike/icon.png" />
+    <link rel="stylesheet" href="css/style3.css">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+    <h1>TEŽAVNOST</h1>
+
+    <div class="menu-container">
+        <button class="btn" onclick="startGame('easy')">Lahek</button>
+        <button class="btn" onclick="startGame('medium')">Srednji</button>
+        <button class="btn" onclick="startGame('hard')">Težek</button>
+
+        <button class="btn btn-start" onclick="navodila()">NAVODILA</button>
+    </div>
+
+	<script src="js/jquery.js"></script>
+    <script src="js/script2.js"></script>
+    <script>
+        function startGame(difficulty) {
+            // Save the chosen difficulty to memory
+            localStorage.setItem('difficulty', difficulty);
+            // Redirect to the actual game
+            window.location.href = 'igra.html';
+        }
+    </script>
+
+	<script src="js/jquery.js"></script>
+    <script src="js/script3.js"></script>
+</body>
+</html>
