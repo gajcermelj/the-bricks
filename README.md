@@ -12,20 +12,6 @@ CSS3 — oblikovanje vmesnika
 JavaScript (jQuery 4.0) — logika igre
 SweetAlert2 — pojavna okna (credits, obvestila)
 
-
-📁 Struktura projekta
-the-bricks/
-├── index.html        # Začetni zaslon — izbira načina igre
-├── index2.html       # Alternativni vstop
-├── igra.html         # Glavni zaslon igre
-├── css/
-│   └── style.css     # Stili
-├── js/
-│   ├── script.js     # Logika igre
-│   └── jquery.js     # jQuery knjižnica
-└── slike/
-    └── icon.png      # Ikona
-
 🚀 Zagon
 Igra ne zahteva nobene namestitve ali strežnika. Preprosto:
 
